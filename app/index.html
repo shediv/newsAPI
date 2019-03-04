@@ -1,41 +1,52 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="myApp" ng-controller="MovieController">
-  <head>
-    <title ng-bind="'Fastr - ' + details.Title"></title>
-    <link rel="stylesheet" href="css/animate.min.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="en">
+<head>
     <meta charset="utf-8">
-  </head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-  <body>
-    <div class="container-fluid outerdiv">
-      <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container-fluid">
-          <div class="navbar-header">
-            <a class="navbar-brand" href="#"><b>Fastr</b> <span class="span-style">Movie Browser</span></a>
-          </div>
+    <title>World Trending News</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/lib/loading-bar.css">
+    <style>
+        body {
+            padding-top: 60px;
+            padding-bottom: 40px;
+            background-color: #eee;
+        }
+    </style>
+</head>
+
+<body ng-app="angularRestfulAuth">
+
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" data-ng-controller="HomeCtrl">
+        <div class="container">
+            <div class="navbar-header">                
+                <a class="navbar-brand" href="#">News API</a>
+            </div>            
         </div>
-      </nav>
-
-      <noscript>
-        <div class="nojs">Javascript is either disabled or not supported in your browser. Please enable it or use a Javascript enabled browser.</div>
-      </noscript>
-
-      <div class="animated zoomInRight">
-        <div class="input-group search-bar">
-          <input type="text" ng-model="search" ng-model-options="{ debounce: 800 }" onclick="select()" class="form-control" placeholder="Enter full movie name" autofocus />
-          <span class="input-group-addon bar-style"><i class="glyphicon glyphicon-search"></i></span>
-        </div>
-
-        <div id="main-info" ng-include="'partials/main-info.html'" class="col-md-8"></div>
-
-        <div id="related-results" ng-include="'partials/related-results.html'" class="col-md-4 animated bounce related-results"></div>
-      </div>
     </div>
+    <div class="container" ng-view="">
 
-    <script src="js/angular.min.js"></script>
-    <script src="js/app.js"></script>
-  </body>
+    </div> <!-- /container -->
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.7/angular.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.7/angular-route.min.js"></script>
+<script src="/lib/loading-bar.js"></script>
+<script src="/js/app.js"></script>
+<script src="/js/controllers.js"></script>
+<script src="/js/services.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://daneden.github.io/animate.css/animate.min.css">
+
+
+</body>
 </html>

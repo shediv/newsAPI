@@ -1,0 +1,74 @@
+<div class="row">
+    <div class="col-lg-12">
+    <div class="panel panel-primary">
+            <div class="panel-heading">
+                <strong>Get Trending News of a country</strong>
+            </div>
+            <div class="panel-body">
+                <form class="form-horizontal" role="form" ng-submit="trending()">
+                    <div class="form-group">
+                        <label for="countryCode" class="col-sm-2 control-label">Seclect Country</label>
+                        <select name="countryCode" id="countryCode" ng-model="countryCode" required>
+                            <option value="IN">India</option>
+                            <optgroup label="countries">
+                                <option value="AU">Australia</option>
+                                <option value="CN">China</option>
+                                <option value="IN">India</option>
+                                <option value="MY">Malaysia</option>
+                                <option value="US">United States</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <!-- <table class="table" ng-show="count">
+                        <thead>
+                          <tr>
+                            <th>Id</th>
+                            <th>Title</th>
+                          </tr>
+                        </thead>
+                        <tbody ng-repeat="news in newsData">
+                          <tr>
+                            <td>{{$index}}</td>
+                            <td><a href='{{news.url}}'>{{news.title}}</a></td>
+                          </tr>
+                        </tbody>
+                    </table>                                         -->
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-default">Trending News</button>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Slider Code -->
+                <div ng-show="showCarousel">
+                    <slider data-slides="slides"></slider>
+                </div>
+                
+                <script type="text/ng-template" id="slider.html">
+                    <div data-ng-mousemove="pause()" data-ng-mouseleave="play()" class="slider">
+                    <div data-ng-repeat="slide in slides" data-ng-show="isActiveIndex($index)" data-ng-class="{prev: isPrev}" class="slide {{setAnimation(slide.animate)}}">
+                        <img class="slide-object" data-ng-src="{{slide.urlToImage}}" alt="Slide {{$index}}">
+                        <div data-ng-show="isActiveIndex($index) && slide.title" class="slider-caption center-center">
+                            {{slide.title}}
+                        </div>
+                    </div>
+                    <div data-ng-show="slides.length > 1" class="slider-controls">
+                        <a data-ng-click="prev()" class="control-d left">
+                        <i class="icon fa fa-chevron-left"></i>
+                        </a>
+                        <a data-ng-click="next()" class="control-d right">
+                        <i class="icon fa fa-chevron-right"></i>
+                        </a>
+                        <!-- <ol class="control-i">
+                        <li data-ng-repeat="slide in slides" data-ng-class="{active: isActiveIndex($index)}" data-ng-click="setActiveIndex($index)" class="indicator"></li>
+                        </ol> -->
+                    </div>
+                    </div>
+                </script>
+                <!-- Slider Code -->
+
+            </div>
+        </div>
+    </div>
+</div>

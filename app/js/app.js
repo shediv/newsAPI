@@ -1,26 +1,18 @@
 'use strict';
 
-angular.module('myApp', [])
-  .controller('MovieController', function($scope, $http){
-    $scope.$watch('search', function() {
-      fetch();
-    });
+angular.module('angularRestfulAuth', [
+    'ngRoute',
+    'angular-loading-bar'
+])
+.config(['$routeProvider', '$httpProvider', function ($routeProvider, $httpProvider) {
 
-    $scope.search = "Sherlock Holmes";
-
-    function fetch(){
-      $http.get("http://www.omdbapi.com/?t=" + $scope.search + "&tomatoes=true&plot=full")
-      .then(function(response){ $scope.details = response.data; });
-
-      $http.get("http://www.omdbapi.com/?s=" + $scope.search)
-      .then(function(response){ $scope.related = response.data; });
+    $routeProvider.
+        when('/', {
+            templateUrl: 'partials/videos.html',
+            controller: 'HomeCtrl'
+        }).
+        otherwise({
+            redirectTo: '/'
+        });
     }
-
-    $scope.update = function(movie){
-      $scope.search = movie.Title;
-    };
-
-    $scope.select = function(){
-      this.setSelectionRange(0, this.value.length);
-    }
-  });
+]);
