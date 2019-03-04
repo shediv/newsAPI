@@ -1,0 +1,9 @@
+{
+	"name" : "myChat",
+	"author" : "shediv",
+	"version" : "0.10.40",
+	"private" : true,
+	"dependencies": {
+		"express": "~3.0.1"
+	}
+}
