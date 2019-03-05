@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-lg-12">
-    <div class="panel panel-primary">
+        <div class="panel panel-primary">
             <div class="panel-heading">
                 <strong>Get Trending News of a country</strong>
             </div>
@@ -19,7 +19,7 @@
                             </optgroup>
                         </select>
                     </div>
-                    <table class="table" ng-show="count">
+                    <!-- <table class="table" ng-show="count">
                         <thead>
                           <tr>
                             <th>Id</th>
@@ -32,13 +32,36 @@
                             <td><a href='{{news.url}}'>{{news.title}}</a></td>
                           </tr>
                         </tbody>
-                    </table>                                        
+                    </table>                                         -->
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
                             <button type="submit" class="btn btn-default">Trending News</button>
                         </div>
                     </div>
                 </form>
+
+                <div ng-show="showCarousel" flex-xs flex-gt-xs="100" layout="column" ng-repeat="news in newsArticles">
+                    <md-card md-theme="default" md-theme-watch>
+                        <md-card-title>
+                            <md-card-title-text>
+                                <span class="md-headline">{{news.title}}</span>
+                            </md-card-title-text>
+                            <md-card-title-media>
+                                <div class="md-media-lg card-media"><img src="{{news.urlToImage}}"></img></div>
+                            </md-card-title-media>
+                        </md-card-title>
+                        <md-content flex layout-padding>
+                        <md-content ng-if="news.text" flex layout-padding>
+                                {{news.text}}
+                        </md-content>        
+                        <md-card-actions layout="row" layout-align="end center">
+                        <md-button ng-click="getArticleDetails(news.url)">Read More..</md-button>
+                        </md-card-actions>
+                    </md-card>
+                </div>
+
+
+
             </div>
         </div>
     </div>
