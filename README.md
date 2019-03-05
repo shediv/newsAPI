@@ -1,1 +1,1 @@
-News API
+News API to get trending news from different countries.
