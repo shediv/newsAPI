@@ -27,6 +27,44 @@ app.get("/", function(req, res) {
     res.sendFile("./app/index.html");
 });
 
+//Get top 5 news from country.
+app.get("/topNews", function(req, res) {
+  var newsAPIUrl = envConfig.newsAPI+'?country='+req.query.country+'&pageSize='+envConfig.newsPageSize+'&apiKey='+envConfig.newsAPIKey;
+  // Configure the request
+  var options = {
+    url: newsAPIUrl,
+    method: 'GET'
+  }
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+        var body = JSON.parse(body);
+        return res.status(200).json({'articles': body.articles})
+    }else{
+      return res.status(500).json({'error': error})
+    }
+  })
+});
+
+//Get Article Details.
+app.get("/articleDetails", function(req, res) {
+  var diffBotAPIUrl = envConfig.diffBotAPI+'?token='+envConfig.diffBotAPIToken+'&url='+req.query.url;
+  // Configure the request
+  var options = {
+    url: diffBotAPIUrl,
+    method: 'GET'
+  }
+
+  // Start the request
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+        var body = JSON.parse(body);
+        return res.status(200).json({'text': body.objects[0].text})
+    }else{
+      return res.status(500).json({'error': error})
+    }
+  })
+});
+
 //Get Summary of text.
 app.post("/summary", function(req, res) {
   // Set the headers

@@ -2,6 +2,7 @@ module.exports = {
     ports: [5000],
     newsAPI: "https://newsapi.org/v2/top-headlines",
     newsAPIKey: "b716b542cff64c48a68f946325d45fd3",
+    newsPageSize: 5,
     //format: 'https://newsapi.org/v2/top-headlines?country='+$scope.countryCode+'&pageSize=5&apiKey=b716b542cff64c48a68f946325d45fd3';
 
     diffBotAPI: "https://api.diffbot.com/v3/article",
