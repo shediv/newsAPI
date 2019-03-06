@@ -14,22 +14,11 @@ angular.module('angularRestfulAuth')
             },
 
             //Get article summary
-            articleDetails2: function(content) {
+            articleSummary: function(content) {
                 var text = content;
-                var data = $.param({
-                    text: text,
-                });
-                var config = {
-                    headers : {
-                        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;',
-                        'Api-Key': '2f48bcb7-ae37-4ba8-9b3c-ed2bad081c93'
-                    }
-                }
-    
-                return $http.post('https://api.deepai.org/api/summarization', data, config).then(function(response){
+                return $http.post('/summary', {text : text}).then(function(response){
                     return response.data;
                 });
-
             }
         };
     }

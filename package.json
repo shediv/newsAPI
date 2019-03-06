@@ -1,12 +1,14 @@
 {
-	"name" : "myChat",
-	"author" : "shediv",
-	"version" : "0.10.40",
-	"private" : true,
-	"scripts": {
-		"start": "node index.js"
-	},
-	"dependencies": {
-		"express": "4.16.4"
-	}
+  "name": "myChat",
+  "author": "shediv",
+  "version": "0.10.40",
+  "private": true,
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "4.16.4",
+    "request": "^2.88.0"
+  }
 }

@@ -32,12 +32,10 @@ angular.module('angularRestfulAuth')
           $scope.diffBotAPI = 'https://api.diffbot.com/v3/article?token=8838f4cab8cb03773198988f371eb5a2&url='+ url;
 
           Main.articleDetails($scope.diffBotAPI, function(res) {
-              return Main.articleDetails2(res.data.objects[0].text).then(function(data){
-                  debugger;
-                $scope.gotData = data;
+              return Main.articleSummary(res.data.objects[0].text).then(function(data){
                 $scope.newsArticles.forEach(function(newsArticle){
                     if(newsArticle.url === url){
-                      newsArticle.text = data.output;
+                      newsArticle.text = data.summary;
                     }
                  })
                 $location.path('/')
