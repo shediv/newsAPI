@@ -23,13 +23,31 @@ angular.module('angularRestfulAuth')
 
         //Get  Get Article Details
         $scope.getArticleDetails = function(url) {
+            $scope.diffBotAPI = '/articleDetails?url='+ url;
+            Main.articleDetails($scope.diffBotAPI, function(res) {
+                  $scope.newsArticles.forEach(function(newsArticle){
+                      if(newsArticle.url === url){
+                        newsArticle.originalText = res.data.text;
+                        newsArticle.originalTextLength = res.data.text.length;
+                        newsArticle.summary = false;
+                      }
+                  $location.path('/')
+                });
+            }, function() {
+                $rootScope.error = 'Failed article details';
+            })
+          };
+
+        //Get  Get Article Details
+        $scope.getArticleSummary = function(url) {
           $scope.diffBotAPI = '/articleDetails?url='+ url;
           Main.articleDetails($scope.diffBotAPI, function(res) {
               return Main.articleSummary(res.data.text).then(function(data){
                 $scope.newsArticles.forEach(function(newsArticle){
                     if(newsArticle.url === url){
-                      newsArticle.text = data.summary;
-                      newsArticle.originalText = res.data.text;
+                      newsArticle.summary = data.summary;
+                      newsArticle.summaryLength = data.summary.length;
+                      newsArticle.originalText = false;
                     }
                  })
                 $location.path('/')

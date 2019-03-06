@@ -19,20 +19,6 @@
                             </optgroup>
                         </select>
                     </div>
-                    <!-- <table class="table" ng-show="count">
-                        <thead>
-                          <tr>
-                            <th>Id</th>
-                            <th>Title</th>
-                          </tr>
-                        </thead>
-                        <tbody ng-repeat="news in newsData">
-                          <tr>
-                            <td>{{$index}}</td>
-                            <td><a href='{{news.url}}'>{{news.title}}</a></td>
-                          </tr>
-                        </tbody>
-                    </table>                                         -->
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
                             <button type="submit" class="btn btn-default">Trending News</button>
@@ -51,17 +37,24 @@
                             </md-card-title-media>
                         </md-card-title>
                         <md-content flex layout-padding>
-                        <md-content ng-if="news.text" flex layout-padding>
-                                {{news.text}}
-                        </md-content>        
+                        <div ng-if="news.summary">
+                            <label>Total length : {{news.summaryLength}} characters</label>
+                            <md-content flex layout-padding>
+                                    {{news.summary}}
+                            </md-content>
+                        </div>
+                        <div ng-if="news.originalText">
+                            <label>Total length : {{news.originalTextLength}} characters</label>
+                            <md-content flex layout-padding>
+                                    {{news.originalText}}
+                            </md-content>
+                        </div>
                         <md-card-actions layout="row" layout-align="end center">
-                        <md-button ng-click="getArticleDetails(news.url)">Read More..</md-button>
+                        <md-button ng-click="getArticleSummary(news.url)">Read Summary</md-button>
+                        <md-button ng-click="getArticleDetails(news.url)">Read Full Article</md-button>
                         </md-card-actions>
                     </md-card>
                 </div>
-
-
-
             </div>
         </div>
     </div>
