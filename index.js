@@ -1,5 +1,6 @@
 var express = require('express');
 var request = require("request");
+const article = require('article');
 const bodyParser = require('body-parser')
 var app = express();
 
@@ -47,22 +48,12 @@ app.get("/topNews", function(req, res) {
 
 //Get Article Details.
 app.get("/articleDetails", function(req, res) {
-  var diffBotAPIUrl = envConfig.diffBotAPI+'?token='+envConfig.diffBotAPIToken+'&url='+req.query.url;
+  //var diffBotAPIUrl = envConfig.diffBotAPI+'?token='+envConfig.diffBotAPIToken+'&url='+req.query.url;
   // Configure the request
-  var options = {
-    url: diffBotAPIUrl,
-    method: 'GET'
-  }
-
-  // Start the request
-  request(options, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-        var body = JSON.parse(body);
-        return res.status(200).json({'text': body.objects[0].text})
-    }else{
-      return res.status(500).json({'error': error})
-    }
-  })
+  request(req.query.url).pipe(article(req.query.url, function (err, result) {
+	  if (err) return res.status(500).json({'error': error});
+	  return res.status(200).json({text: result.text});
+	}));
 });
 
 //Get Summary of text.
