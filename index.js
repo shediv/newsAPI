@@ -58,13 +58,14 @@ app.get("/feeds", function(req, res){
           link: news.url,
           description: news.description,
           content: news.content,
-          date: new Date(),
-          image: news.urlToImage
+          date: new Date()
+          //image: news.urlToImage
         });
       });
            
       feed.addCategory("News");
-      return res.send(feed.rss2());
+      console.log(feed.rss2())
+      return res.type('application/xml').send(feed.rss2());
     }
   });
 })
