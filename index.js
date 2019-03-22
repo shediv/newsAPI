@@ -64,7 +64,7 @@ app.get("/feeds", function(req, res){
       });
            
       feed.addCategory("News");
-      console.log(feed.rss2())
+      //console.log(feed.rss2())
       return res.type('application/xml').send(feed.rss2());
     }
   });
