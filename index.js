@@ -2,6 +2,7 @@ var express = require('express');
 var request = require("request");
 const article = require('article');
 const bodyParser = require('body-parser')
+const Feed = require('feed').Feed;
 var app = express();
 
 this.params = {};
@@ -27,6 +28,46 @@ app.use(express.static("./app"));
 app.get("/", function(req, res) {
     res.sendFile("./app/index.html");
 });
+
+app.get("/feeds", function(req, res){
+
+  let topNews = [];
+  //Get the top 5 news articles
+  request('http://localhost:5000/topNews?country=IN', function (error, response) {
+    if(error){
+      return res.status(500).json({'error': error})
+    }else{
+      var articleBody = JSON.parse(response.body);
+      articleBody.articles.forEach(e => {
+        topNews.push(e);
+      });
+
+      const feed = new Feed({
+        title: 'Top news in India',
+        description: 'This page will show you top news in India',
+        id: '',
+        link: '',
+        language: "en", 
+        updated: new Date(), // optional, default = today
+      });
+      //const feed = new Feed();
+      topNews.forEach(news => {
+        feed.addItem({
+          title: news.title,
+          id: news.url,
+          link: news.url,
+          description: news.description,
+          content: news.content,
+          date: new Date(),
+          image: news.urlToImage
+        });
+      });
+           
+      feed.addCategory("News");
+      return res.send(feed.rss2());
+    }
+  });
+})
 
 //Get top 5 news from country.
 app.get("/topNews", function(req, res) {

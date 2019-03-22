@@ -10,6 +10,7 @@
     "article": "^1.1.2",
     "body-parser": "^1.18.3",
     "express": "4.16.4",
+    "feed": "^2.0.4",
     "request": "^2.88.0"
   }
 }
