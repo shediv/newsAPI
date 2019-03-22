@@ -45,8 +45,8 @@ app.get("/feeds", function(req, res){
       const feed = new Feed({
         title: 'Top news in India',
         description: 'This page will show you top news in India',
-        id: '',
-        link: '',
+        id: 'http://13.250.77.198:5000/feeds',
+        link: 'http://13.250.77.198:5000/feeds',
         language: "en", 
         updated: new Date(), // optional, default = today
       });
