@@ -11,6 +11,7 @@
     "body-parser": "^1.18.3",
     "express": "4.16.4",
     "feed": "^2.0.4",
+    "feed-generator": "^1.0.6",
     "request": "^2.88.0"
   }
 }

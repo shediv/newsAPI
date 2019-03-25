@@ -29,6 +29,23 @@ app.get("/", function(req, res) {
     res.sendFile("./app/index.html");
 });
 
+//rss feed
+app.get("/test", function(req, res) {
+  var feedster = require('feed-generator');
+  var feed = feedster.createFeed({
+      title: 'My Awesome Blog'
+  });
+  feed.addItem({
+      title: 'My first blog post',
+      // thats badly formatted date (no timezone etc.) but it works
+      pubDate: '2011-01-01 14:34:00'
+  })
+  var rss = feed.render({indent: '  '});
+  // console.log(rss);
+  // return res.send(rss)
+  return res.type('application/xml').send(rss);
+});
+
 //New feeds
 app.get("/feeds", function(req, res){
 
