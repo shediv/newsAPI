@@ -30,6 +30,10 @@ app.get("/", function(req, res) {
     res.sendFile("./app/index.html");
 });
 
+app.get("/google1f90687b77368bc0.html", function(req, res) {
+  res.sendFile(__dirname + '/google1f90687b77368bc0.html');
+});
+
 //rss feed
 app.get("/test", function(req, res) {
   // var feedster = require('feed-generator');
