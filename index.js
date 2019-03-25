@@ -29,6 +29,7 @@ app.get("/", function(req, res) {
     res.sendFile("./app/index.html");
 });
 
+//New feeds
 app.get("/feeds", function(req, res){
 
   let topNews = [];
