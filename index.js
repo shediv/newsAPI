@@ -3,6 +3,7 @@ var request = require("request");
 const article = require('article');
 const bodyParser = require('body-parser')
 const Feed = require('feed').Feed;
+var feedster = require('feed-generator');
 var app = express();
 
 this.params = {};
@@ -31,19 +32,47 @@ app.get("/", function(req, res) {
 
 //rss feed
 app.get("/test", function(req, res) {
-  var feedster = require('feed-generator');
-  var feed = feedster.createFeed({
-      title: 'My Awesome Blog'
+  // var feedster = require('feed-generator');
+  // var feed = feedster.createFeed({
+  //     title: 'My Awesome Blog'
+  // });
+  // feed.addItem({
+  //     title: 'My first blog post',
+  //     // thats badly formatted date (no timezone etc.) but it works
+  //     pubDate: '2011-01-01 14:34:00'
+  // })
+  // var rss = feed.render({indent: '  '});
+  // return res.type('application/xml').send(rss);
+
+  let topNews = [];
+  //Get the top 5 news articles
+  request(envConfig.herokuURL+'/topNews?country=IN', function (error, response) {
+    if(error){
+      return res.status(500).json({'error': error})
+    }else{
+      var articleBody = JSON.parse(response.body);
+      articleBody.articles.forEach(e => {
+        topNews.push(e);
+      });
+
+      var feed = feedster.createFeed({
+          title: 'Top news of India'
+      });
+
+      //const feed = new Feed();
+      topNews.forEach(news => {
+        feed.addItem({
+            title: news.title,
+            pubDate: news.publishedAt
+        })
+      });
+           
+      var rss = feed.render({indent: '  '});
+      return res.type('application/xml').send(rss);
+    }
   });
-  feed.addItem({
-      title: 'My first blog post',
-      // thats badly formatted date (no timezone etc.) but it works
-      pubDate: '2011-01-01 14:34:00'
-  })
-  var rss = feed.render({indent: '  '});
-  // console.log(rss);
-  // return res.send(rss)
-  return res.type('application/xml').send(rss);
+
+
 });
 
 //New feeds
