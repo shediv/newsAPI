@@ -33,7 +33,7 @@ app.get("/feeds", function(req, res){
 
   let topNews = [];
   //Get the top 5 news articles
-  request('http://localhost:5000/topNews?country=IN', function (error, response) {
+  request(envConfig.herokuURL+'/topNews?country=IN', function (error, response) {
     if(error){
       return res.status(500).json({'error': error})
     }else{

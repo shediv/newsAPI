@@ -14,5 +14,9 @@ module.exports = {
     //format: 'https://api.diffbot.com/v3/article?token=8838f4cab8cb03773198988f371eb5a2&url='+ url;
 
     dataLimit: "50mb",
-    envDevelopment: "development"
+    envDevelopment: "development",
+
+    herokuURL: "https://trending-news-v.herokuapp.com",
+    serverURL: "http://13.250.77.198:5000",
+    localURL: "http://localhost:5000"
 };
