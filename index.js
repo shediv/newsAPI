@@ -62,7 +62,11 @@ app.get("/test", function(req, res) {
       //const feed = new Feed();
       topNews.forEach(news => {
         feed.addItem({
+            id: news.url,
             title: news.title,
+            link: news.url,
+            description: news.description,
+            content: news.content,
             pubDate: news.publishedAt
         })
       });
