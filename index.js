@@ -67,7 +67,6 @@ app.get("/test", function(req, res) {
             link: news.url,
             description: news.description,
             content: news.content,
-            image: news.urlToImage,
             pubDate: news.publishedAt
         })
       });
