@@ -165,6 +165,82 @@ app.get("/news-feeds", function(req, res){
   })
 })
 
+app.get("/mrss", function(req, res){
+  var mrss = `
+  <rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
+       xmlns:media="http://search.yahoo.com/mrss/"
+       version="2.0">
+    <channel>
+     <title>Nancy News Stories For Your Day</title>
+     <link>http://www.nancynews.com</link>
+     <description>Daily News with Nancy</description>
+     <itunes:author>Nancy News</itunes:author>
+     <image>
+       <url>http://www.nancynews.com/logo.png</url>
+       <title>Nancy News</title>
+       <link>http://www.nancynews.com</link>
+     </image>
+     <item>
+       <title>Pandas run loose</title>
+       <description>Pandas escape from the SF Zoo due to activist
+         interference</description>
+       <link>http://www.nancynews.com/article/pandas-run-loose.html</link>
+       <guid>http://www.nancynews.com/id/1234567891</guid>
+       <enclosure length="187" type="audio/mpeg" url="http://nancynews.com/pandas.mp3"/>
+       <media:content url="http://nancynews.com/jane_doe_intro.mp3" type="audio/mpeg"
+         expression="sample" />
+       <media:content url="http://nancynews.com/pandas.mp3" type="audio/mpeg" />
+       <media:thumbnail url="http://nancynews.com/pandas.jpg"
+         width="1000" height="1000" />
+       <pubDate>Thu, 8 Jun 2018 09:10:00 GMT</pubDate>
+       <itunes:duration>45</itunes:duration>
+     </item>
+     <item>
+       <title>Celebrities headline relief efforts</title>
+       <description>Stars are taking action to support those that lost their homes in
+         wildfires by offering hands-on support</description>
+       <link>http://www.nancynews.com/article/celebrities-headline-relief-efforts.html
+         </link>
+       <guid>http://www.nancynews.com/id/1234567892</guid>
+       <enclosure length="145" type="audio/mpeg"
+         url="http://nancynews.com/starrelief.mp3"/>
+       <media:content url="http://nancynews.com/jane_doe_intro.mp3" type="audio/mpeg"
+         expression="sample" />
+       <media:group>
+         <media:content url="http://nancynews.com/starrelief.mp3" type="audio/mpeg" />
+         <media:content url="http://nancynews.com/starrelief.mp4" type="video/mp4" />
+       </media:group>
+       <media:credit scheme="urn:ebu" reporter="Jane Doe" />
+       <media:thumbnail url="http://nancynews.com/celebrities_hurricane.jpg"
+         width="1000" height="1000" />
+       <pubDate>Thu, 8 Jun 2018 09:20:00 GMT</pubDate>
+       <itunes:duration>30</itunes:duration>
+     </item>
+     <item>
+       <title>Sabercats win it all!</title>
+       <description>Sabercats fans celebrate again after 25 year drought!</description>
+       <link>http://www.nancynews.com/article/sabercats-win-it-all.html</link>
+       <guid>http://www.nancynews.com/id/1234567893</guid>
+       <enclosure length="208" type="audio/mpeg" url="http://nancynews.com/sample.mp3"/>
+       <media:group>
+         <media:content url="http://nancynews.com/sabercats_4000.mp4" duration="129"
+           type="video/mp4" bitrate="4096000" width="1920" height="1080"/>
+         <media:content url="http://nancynews.com/sabercats_1500.mp4" duration="129"
+           type="video/mp4" bitrate="1596000" width="960" height="540"/>
+         <media:content url="http://nancynews.com/sabercats_400.mp4" duration="129"
+           type="video/mp4" bitrate="496000" width="448" height="252"/>
+         <media:content url="http://nancynews.com/sabercats.mp3" duration="129"
+           type="audio/mp3" bitrate="128000" width="0" height="0"/>
+       </media:group>
+       <pubDate>Thu, 8 Jun 2018 11:03:00 GMT</pubDate>
+       <itunes:duration>45</itunes:duration>
+     </item>
+    </channel>
+  </rss>`
+  return res.type('application/xml').send(mrss);
+        
+})
+
 //Get top 5 news from country.
 app.get("/topNews", function(req, res) {
   var newsAPIUrl = envConfig.newsAPI+'?country='+req.query.country+'&pageSize='+envConfig.newsPageSize+'&apiKey='+envConfig.newsAPIKey;
