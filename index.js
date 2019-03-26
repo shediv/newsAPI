@@ -121,7 +121,8 @@ app.get("/feeds", function(req, res){
 })
 
 app.get("/news-feeds", function(req, res){
-  var newsAPIUrl = envConfig.newsAPI+'?country='+req.query.country+'&pageSize='+envConfig.newsPageSize+'&apiKey='+envConfig.newsAPIKey;
+  let countryCode = req.query.country ? req.query.country : 'IN';
+  var newsAPIUrl = envConfig.newsAPI+'?country='+countryCode+'&pageSize='+envConfig.newsPageSize+'&apiKey='+envConfig.newsAPIKey;
   let topNews = [];
   // Configure the request
   var options = {
@@ -137,7 +138,7 @@ app.get("/news-feeds", function(req, res){
         });
 
         var feed = feedster.createFeed({
-            title: 'Top news of '+req.query.country
+            title: 'Top news of '+countryCode
         });
 
         async.each(topNews, function(news, callback) {
