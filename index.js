@@ -121,44 +121,47 @@ app.get("/feeds", function(req, res){
 })
 
 app.get("/news-feeds", function(req, res){
-  var countryCode = 'IN';
-  if(req.query.country) countryCode = req.query.country;
+  var newsAPIUrl = envConfig.newsAPI+'?country='+req.query.country+'&pageSize='+envConfig.newsPageSize+'&apiKey='+envConfig.newsAPIKey;
   let topNews = [];
-  //Get the top 5 news articles
-  request(envConfig.herokuURL+'/topNews?country='+countryCode, function (error, response) {
-    if(error){
-      return res.status(500).json({'error': error})
+  // Configure the request
+  var options = {
+    url: newsAPIUrl,
+    method: 'GET'
+  }
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+        var articleBody = JSON.parse(body);
+        //var articleBody = JSON.parse(response.body);
+        articleBody.articles.forEach(e => {
+          topNews.push(e);
+        });
+
+        var feed = feedster.createFeed({
+            title: 'Top news of '+req.query.country
+        });
+
+        async.each(topNews, function(news, callback) {
+          // Configure the request
+          request(news.url).pipe(article(news.url, function (errS, summary) {
+            feed.addItem({
+                id: news.author+new Date(),
+                title: news.title,
+                description: news.description,
+                content: summary ? summary.text : '',
+                pubDate: news.publishedAt,
+                image: summary ? summary.image : ''
+            })
+            callback()  
+          }));
+
+        }, function(err) {
+            var rss = feed.render({indent: '  '});
+            return res.type('application/xml').send(rss);
+        });
     }else{
-      var articleBody = JSON.parse(response.body);
-      articleBody.articles.forEach(e => {
-        topNews.push(e);
-      });
-
-      var feed = feedster.createFeed({
-          title: 'Top news of '+countryCode
-      });
-
-      async.each(topNews, function(news, callback) {
-        // Configure the request
-        request(news.url).pipe(article(news.url, function (errS, summary) {
-          feed.addItem({
-              id: news.author+new Date(),
-              title: news.title,
-              //link: news.url,
-              description: news.description,
-              content: summary.text,
-              pubDate: news.publishedAt,
-              image: summary.image
-          })
-          callback()  
-        }));
-
-      }, function(err) {
-          var rss = feed.render({indent: '  '});
-          return res.type('application/xml').send(rss);
-      });
+      return res.status(500).json({'error': error})
     }
-  });
+  })
 })
 
 //Get top 5 news from country.
