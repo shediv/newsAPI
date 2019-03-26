@@ -120,86 +120,45 @@ app.get("/feeds", function(req, res){
   });
 })
 
-app.get("/feedTest", function(req, res){
+app.get("/news-feeds", function(req, res){
+  var countryCode = 'IN';
+  if(req.query.country) countryCode = req.query.country;
+  let topNews = [];
+  //Get the top 5 news articles
+  request(envConfig.herokuURL+'/topNews?country='+countryCode, function (error, response) {
+    if(error){
+      return res.status(500).json({'error': error})
+    }else{
+      var articleBody = JSON.parse(response.body);
+      articleBody.articles.forEach(e => {
+        topNews.push(e);
+      });
 
-  let topNews = `<rss version="2.0">
-  <channel>
-      <title>FeedForAll Sample Feed</title>
-      <description>
-      RSS is a fascinating technology. The uses for RSS are expanding daily. Take a closer look at how various industries are using the benefits of RSS in their businesses.
-      </description>
-      <link>http://www.feedforall.com/industry-solutions.htm</link>
-      <category domain="www.dmoz.com">
-      Computers/Software/Internet/Site Management/Content Management
-      </category>
-      <copyright>Copyright 2004 NotePage, Inc.</copyright>
-      <docs>http://blogs.law.harvard.edu/tech/rss</docs>
-      <language>en-us</language>
-      <lastBuildDate>Tue, 19 Oct 2004 13:39:14 -0400</lastBuildDate>
-      <managingEditor>marketing@feedforall.com</managingEditor>
-      <pubDate>Tue, 19 Oct 2004 13:38:55 -0400</pubDate>
-      <webMaster>webmaster@feedforall.com</webMaster>
-      <generator>FeedForAll Beta1 (0.0.1.8)</generator>
-      <image>
-          <url>http://www.feedforall.com/ffalogo48x48.gif</url>
-          <title>FeedForAll Sample Feed</title>
-          <link>http://www.feedforall.com/industry-solutions.htm</link>
-          <description>FeedForAll Sample Feed</description>
-          <width>48</width>
-          <height>48</height>
-      </image>
-      <item>
-          <title>RSS Resources</title>
-          <description>
-            <p>
-                Be sure to take a look at some of our favorite RSS Resources
-                <a href="http://www.rss-specifications.com">
-                    RSS Specifications
-                </a>
-                <a href="http://www.blog-connection.com">
-                    Blog Connection
-                </a>
-            </p>
-          </description>
-          <link>http://www.feedforall.com</link>
-          <pubDate>Tue, 26 Oct 2004 14:01:01 -0500</pubDate>
-      </item>
-          <item>
-          <title>Recommended Desktop Feed Reader Software</title>
-          <description>
-          <p>
-              Be sure to take a look at some of our favorite RSS Resources
-              <a href="http://www.rss-specifications.com">
-                  RSS Specifications
-              </a>
-              <a href="http://www.blog-connection.com">
-                  Blog Connection
-              </a>
-          </p>
-          </description>
-          <link>http://www.feedforall.com/feedforall-partners.htm</link>
-          <pubDate>Tue, 26 Oct 2004 14:03:25 -0500</pubDate>
-      </item>
-      <item>
-          <title>Recommended Web Based Feed Reader Software</title>
-          <description>
-          <p>
-              Be sure to take a look at some of our favorite RSS Resources
-              <a href="http://www.rss-specifications.com">
-                  RSS Specifications
-              </a>
-              <a href="http://www.blog-connection.com">
-                  Blog Connection
-              </a>
-          </p>
-          </description>
-          <link>http://www.feedforall.com/feedforall-partners.htm</link>
-          <pubDate>Tue, 26 Oct 2004 14:06:44 -0500</pubDate>
-      </item>
-  </channel>
-  </rss>`;
+      var feed = feedster.createFeed({
+          title: 'Top news of '+countryCode
+      });
 
-  return res.type('application/xml').send(topNews);
+      async.each(topNews, function(news, callback) {
+        // Configure the request
+        request(news.url).pipe(article(news.url, function (errS, summary) {
+          feed.addItem({
+              id: news.author+new Date(),
+              title: news.title,
+              //link: news.url,
+              description: news.description,
+              content: summary.text,
+              pubDate: news.publishedAt,
+              image: summary.image
+          })
+          callback()  
+        }));
+
+      }, function(err) {
+          var rss = feed.render({indent: '  '});
+          return res.type('application/xml').send(rss);
+      });
+    }
+  });
 })
 
 //Get top 5 news from country.
