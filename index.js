@@ -4,6 +4,7 @@ const article = require('article');
 const bodyParser = require('body-parser')
 const Feed = require('feed').Feed;
 var feedster = require('feed-generator');
+var async = require('async');
 var app = express();
 
 this.params = {};
@@ -64,19 +65,59 @@ app.get("/test", function(req, res) {
       });
 
       //const feed = new Feed();
-      topNews.forEach(news => {
-        feed.addItem({
-            id: news.url,
-            title: news.title,
-            link: news.url,
-            description: news.description,
-            content: news.content,
-            pubDate: news.publishedAt
-        })
+      // topNews.forEach(news => {
+      //   // Configure the request
+      //   request(news.url).pipe(article(news.url, function (errS, summary) {
+      //     feed.addItem({
+      //         id: news.author+new Date(),
+      //         title: news.title,
+      //         //link: news.url,
+      //         description: news.description,
+      //         content: summary.text,
+      //         pubDate: news.publishedAt
+      //     })  
+      //   }));
+
+      //   // feed.addItem({
+      //   //     id: news.url,
+      //   //     title: news.title,
+      //   //     link: news.url,
+      //   //     description: news.description,
+      //   //     content: news.content,
+      //   //     pubDate: news.publishedAt
+      //   // })
+      // });
+
+
+      async.each(topNews, function(news, callback) {
+        // Configure the request
+        request(news.url).pipe(article(news.url, function (errS, summary) {
+          feed.addItem({
+              id: news.author+new Date(),
+              title: news.title,
+              //link: news.url,
+              description: news.description,
+              content: summary.text,
+              pubDate: news.publishedAt
+          })
+          callback()  
+        }));
+
+      }, function(err) {
+          // // if any of the file processing produced an error, err would equal that error
+          // if( err ) {
+          //   // One of the iterations produced an error.
+          //   // All processing will now stop.
+          //   console.log('A file failed to process');
+          // } else {
+          //   console.log('All files have been processed successfully');
+          // }
+
+          var rss = feed.render({indent: '  '});
+          return res.type('application/xml').send(rss);
+
       });
-           
-      var rss = feed.render({indent: '  '});
-      return res.type('application/xml').send(rss);
+      
     }
   });
 

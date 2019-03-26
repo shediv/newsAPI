@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "article": "^1.1.2",
+    "async": "^2.6.2",
     "body-parser": "^1.18.3",
     "express": "4.16.4",
     "feed": "^2.0.4",
