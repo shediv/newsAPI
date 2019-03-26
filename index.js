@@ -35,20 +35,12 @@ app.get("/google1f90687b77368bc0.html", function(req, res) {
   res.sendFile(__dirname + '/google1f90687b77368bc0.html');
 });
 
+app.get("/google76afafe39ef3304f.html", function(req, res) {
+  res.sendFile(__dirname + '/google76afafe39ef3304f.html');
+});
+
 //rss feed
 app.get("/test", function(req, res) {
-  // var feedster = require('feed-generator');
-  // var feed = feedster.createFeed({
-  //     title: 'My Awesome Blog'
-  // });
-  // feed.addItem({
-  //     title: 'My first blog post',
-  //     // thats badly formatted date (no timezone etc.) but it works
-  //     pubDate: '2011-01-01 14:34:00'
-  // })
-  // var rss = feed.render({indent: '  '});
-  // return res.type('application/xml').send(rss);
-
   let topNews = [];
   //Get the top 5 news articles
   request(envConfig.herokuURL+'/topNews?country=IN', function (error, response) {
@@ -63,31 +55,6 @@ app.get("/test", function(req, res) {
       var feed = feedster.createFeed({
           title: 'Top news of India'
       });
-
-      //const feed = new Feed();
-      // topNews.forEach(news => {
-      //   // Configure the request
-      //   request(news.url).pipe(article(news.url, function (errS, summary) {
-      //     feed.addItem({
-      //         id: news.author+new Date(),
-      //         title: news.title,
-      //         //link: news.url,
-      //         description: news.description,
-      //         content: summary.text,
-      //         pubDate: news.publishedAt
-      //     })  
-      //   }));
-
-      //   // feed.addItem({
-      //   //     id: news.url,
-      //   //     title: news.title,
-      //   //     link: news.url,
-      //   //     description: news.description,
-      //   //     content: news.content,
-      //   //     pubDate: news.publishedAt
-      //   // })
-      // });
-
 
       async.each(topNews, function(news, callback) {
         // Configure the request
@@ -104,24 +71,11 @@ app.get("/test", function(req, res) {
         }));
 
       }, function(err) {
-          // // if any of the file processing produced an error, err would equal that error
-          // if( err ) {
-          //   // One of the iterations produced an error.
-          //   // All processing will now stop.
-          //   console.log('A file failed to process');
-          // } else {
-          //   console.log('All files have been processed successfully');
-          // }
-
           var rss = feed.render({indent: '  '});
           return res.type('application/xml').send(rss);
-
       });
-      
     }
   });
-
-
 });
 
 //New feeds
