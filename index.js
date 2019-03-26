@@ -39,6 +39,11 @@ app.get("/google76afafe39ef3304f.html", function(req, res) {
   res.sendFile(__dirname + '/google76afafe39ef3304f.html');
 });
 
+// https://trending-news-v.herokuapp.com/file-1552915152824.mp3
+app.get("/file-1552915152824.mp3", function(req, res) {
+  res.sendFile(__dirname + '/file-1552915152824.mp3');
+});
+
 //rss feed
 app.get("/test", function(req, res) {
   let topNews = [];
@@ -121,44 +126,83 @@ app.get("/feeds", function(req, res){
 })
 
 app.get("/news-feeds", function(req, res){
-  var countryCode = 'IN';
-  if(req.query.country) countryCode = req.query.country;
+  let countryCode = req.query.country ? req.query.country : 'IN';
+  var newsAPIUrl = envConfig.newsAPI+'?country='+countryCode+'&pageSize='+envConfig.newsPageSize+'&apiKey='+envConfig.newsAPIKey;
   let topNews = [];
-  //Get the top 5 news articles
-  request(envConfig.herokuURL+'/topNews?country='+countryCode, function (error, response) {
-    if(error){
-      return res.status(500).json({'error': error})
+  // Configure the request
+  var options = {
+    url: newsAPIUrl,
+    method: 'GET'
+  }
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+        var articleBody = JSON.parse(body);
+        //var articleBody = JSON.parse(response.body);
+        articleBody.articles.forEach(e => {
+          topNews.push(e);
+        });
+
+        var feed = feedster.createFeed({
+            title: 'Top news of '+countryCode
+        });
+
+        async.each(topNews, function(news, callback) {
+          // Configure the request
+          request(news.url).pipe(article(news.url, function (errS, summary) {
+            feed.addItem({
+                id: news.author+new Date(),
+                title: news.title,
+                description: news.description,
+                content: summary ? summary.text : '',
+                pubDate: news.publishedAt,
+                image: summary ? summary.image : ''
+            })
+            callback()  
+          }));
+
+        }, function(err) {
+            var rss = feed.render({indent: '  '});
+            return res.type('application/xml').send(rss);
+        });
     }else{
-      var articleBody = JSON.parse(response.body);
-      articleBody.articles.forEach(e => {
-        topNews.push(e);
-      });
-
-      var feed = feedster.createFeed({
-          title: 'Top news of '+countryCode
-      });
-
-      async.each(topNews, function(news, callback) {
-        // Configure the request
-        request(news.url).pipe(article(news.url, function (errS, summary) {
-          feed.addItem({
-              id: news.author+new Date(),
-              title: news.title,
-              //link: news.url,
-              description: news.description,
-              content: summary.text,
-              pubDate: news.publishedAt,
-              image: summary.image
-          })
-          callback()  
-        }));
-
-      }, function(err) {
-          var rss = feed.render({indent: '  '});
-          return res.type('application/xml').send(rss);
-      });
+      return res.status(500).json({'error': error})
     }
-  });
+  })
+})
+
+app.get("/mrss", function(req, res){
+  var mrss = `
+  <rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
+       xmlns:media="http://search.yahoo.com/mrss/"
+       version="2.0">
+    <channel>
+     <title>Developer News</title>
+     <link>https://trending-news-v.herokuapp.com</link>
+     <description>Developer News Daily</description>
+     <itunes:author>Developer News</itunes:author>
+     <image>
+       <url>https://cdn.stocksnap.io/img-thumbs/960w/FU5O3YEFX5.jpg</url>
+       <title>Developer News</title>
+       <link>https://trending-news-v.herokuapp.com</link>
+     </image>
+     <item>
+       <title>Pandas run loose</title>
+       <description>Pandas escape from the SF Zoo due to activist
+         interference</description>
+       <link>https://trending-news-v.herokuapp.com/mrss</link>
+       <guid>https://trending-news-v.herokuapp.com/mrss/1234567891</guid>
+       <enclosure length="187" type="audio/mpeg" url="https://trending-news-v.herokuapp.com/file-1552915152824.mp3"/>
+       <media:content url="https://trending-news-v.herokuapp.com/file-1552915152824.mp3" type="audio/mpeg"
+         expression="sample" />
+       <media:content url="https://trending-news-v.herokuapp.com/file-1552915152824.mp3" type="audio/mpeg" />
+       <media:thumbnail url="https://trending-news-v.herokuapp.com/file-1552915152824.mp3"
+         width="1000" height="1000" />
+       <pubDate>Thu, 8 Jun 2018 09:10:00 GMT</pubDate>
+       <itunes:duration>45</itunes:duration>
+     </item>
+    </channel>
+  </rss>`
+  return res.type('application/xml').send(mrss);
 })
 
 //Get top 5 news from country.
