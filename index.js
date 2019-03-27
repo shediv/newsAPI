@@ -152,7 +152,7 @@ app.get("/news-feeds", function(req, res){
             feed.addItem({
                 id: news.author+new Date(),
                 title: news.title,
-                description: news.description,
+                description: summary.text,
                 content: summary ? summary.text : '',
                 pubDate: news.publishedAt,
                 image: summary ? summary.image : ''
