@@ -153,7 +153,7 @@ app.get("/news-feeds", function(req, res){
                 id: news.author+new Date(),
                 title: news.title,
                 description: news.description,
-                content: summary ? summary.text : '',
+                content: summary ? summary.text.replace("\n", "<br>") : '',
                 pubDate: news.publishedAt,
                 image: summary ? summary.image : ''
             })
